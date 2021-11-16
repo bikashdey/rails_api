@@ -1,4 +1,4 @@
-class ArticlesController < ApplicationController
+class Api::V1::ArticlesController < ApplicationController
 
     def index
 
@@ -27,8 +27,8 @@ class ArticlesController < ApplicationController
   
 
     def update
-   
-        article = Article.find_by(params[:id])
+    
+        article = Article.find(params[:id])
         article.article_name = params[:article][:article_name]
         article.article_description = params[:article][:article_description]
 
@@ -42,7 +42,7 @@ class ArticlesController < ApplicationController
     end
 
     def destroy
-        article = Article.find_by(params[:id])
+        article = Article.find(params[:id])
         article.destroy
 
         render json: {status: 200 , message: "article destroyed successfully.."}
