@@ -36,7 +36,7 @@ class Api::V1::ArticlesController < ApplicationController
             render json: article
         else
 
-            render json: { status: 400 }
+            render json: { status: 400 , message: "article updated successfully" }
         end 
 
     end
