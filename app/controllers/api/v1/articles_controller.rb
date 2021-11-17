@@ -1,5 +1,7 @@
 class Api::V1::ArticlesController < ApplicationController
 
+    before_action :set_connection
+
     def index
 
         articles = Article.all
@@ -53,6 +55,18 @@ class Api::V1::ArticlesController < ApplicationController
     
     def article_params
         params.require(:article).permit(:article_name, :article_description)
+    end
+
+    def set_connection
+        ActiveRecord::Base.clear_active_connections!
+        ActiveRecord::Base.establish_connection(
+            adapter:  "mysql2",
+            host:     "localhost",
+            username: "root",
+            password: "",
+            database: "rails_api_establish_development"
+          )
+    
     end
 
 end

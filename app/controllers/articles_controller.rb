@@ -1,6 +1,9 @@
 class ArticlesController < ApplicationController
+    before_action :set_connection
 
     def index
+        byebug
+        encrypted_consumer_key
 
         articles = Article.all
 
@@ -54,5 +57,29 @@ class ArticlesController < ApplicationController
     def article_params
         params.require(:article).permit(:article_name, :article_description)
     end
+
+    def set_connection
+        ActiveRecord::Base.clear_active_connections!
+        ActiveRecord::Base.establish_connection(
+            adapter:  "mysql2",
+            host:     "localhost",
+            username: "root",
+            password: "",
+            database: "rails_api_development"
+          )
+    
+    end
+
+
+    def encrypted_consumer_key
+        byebug
+        # salt = ENV['SALT'] # We save the value of: SecureRandom.random_bytes(64)
+        key = ENV['KEY']   # We save the value of: ActiveSupport::KeyGenerator.new('password').generate_key(salt)
+        crypt = ActiveSupport::MessageEncryptor.new(key)
+        consumer_key = self.consumer_key # Input value from our form
+        encrypted_data = crypt.encrypt_and_sign(consumer_key) # or crypt.encrypt_and_sign(self.consumer_key)
+        self.consumer_key = encrypted_data
+        # You can refactor to make these steps shorter.
+      end
 
 end
